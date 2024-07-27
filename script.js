@@ -24,11 +24,14 @@ document.getElementById('seatFinderForm').addEventListener('submit', async (even
 });
 
 function findSeatNumbers(bookingCode, rows) {
-    for (const row of rows) {
-        const columns = row.split(',');
-        if (columns[0].trim().toLowerCase() === bookingCode) {
-            return columns[1].trim(); // Return the entire cell content as is
-        }
+  for (const row of rows) {
+    const columns = row.split(',');
+    // Remove quotes and extra spaces before comparing
+    if (columns[0].replace(/['"]+/g, '').trim().toLowerCase() === bookingCode) {
+      // Split seats by spaces and trim each seat
+      return columns[1].replace(/['"]+/g, '').split(' ').map(seat => seat.trim());
     }
-    return null; 
+  }
+  return null; // Return null if booking code is not found
+}
 }
