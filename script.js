@@ -1,47 +1,64 @@
-document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const resultDiv = document.getElementById('result');
-    const nameDisplay = document.getElementById('name');
-    const categoryDisplay = document.getElementById('category');
-    const seatNumbersDisplay = document.getElementById('seatNumbers');
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Senandung Alam Seat Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="Bannersenandungalam.png" alt="Senandung Alam Banner">
+  </header>
 
-    resultDiv.textContent = ''; // Clear previous results
-    nameDisplay.textContent = '';
-    categoryDisplay.textContent = '';
-    seatNumbersDisplay.textContent = '';
+  <main>
+    <h2>Find Your Seat</h2>
+    <form id="seatFinderForm">
+      <label for="bookingCode">Booking Code:</label>
+      <input type="text" id="bookingCode" name="bookingCode" required>
+      <button type="submit">Find My Seat</button>
+    </form>
+    <div id="result">
+    </div>
+  </main>
 
-    const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
-    const dataUrl = 'seat_finder.csv'; // Replace with your actual CSV file name
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = '';
 
-    try {
+      const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
+      const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; // Replace with your actual CSV file name
+
+      try {
         const response = await fetch(dataUrl, { mode: 'cors' });
         const data = await response.text();
         const rows = data.split('\n').slice(1); // Skip header row
-        const dataFound = findSeatDetails(bookingCode, rows);
+        const seatInfo = findSeatInfo(bookingCode, rows);
 
-        if (dataFound) {
-            nameDisplay.textContent = `Name: ${dataFound.name}`;
-            categoryDisplay.textContent = `Category: ${dataFound.category}`;
-            seatNumbersDisplay.textContent = `Your Seat(s): ${dataFound.seatNumbers.join(', ')}`;
+        if (seatInfo) {
+          resultDiv.textContent = `Name: ${seatInfo.firstName} ${seatInfo.lastName}\nCategory: ${seatInfo.category}\nSeat(s): ${seatInfo.seatNumbers}`;
         } else {
-            resultDiv.textContent = 'Booking code not found. Please check your code and try again.';
+          resultDiv.textContent = 'Booking code not found. Please check your code and try again.';
         }
-    } catch (error) {
+      } catch (error) {
         resultDiv.textContent = 'Error retrieving seat information.';
         console.error(error);
-    }
-});
+      }
+    });
 
-function findSeatDetails(bookingCode, rows) {
-    for (const row of rows) {
+    function findSeatInfo(bookingCode, rows) {
+      for (const row of rows) {
         const columns = row.split(',');
-        if (columns[0].replace(/['"]+/g, '').trim().toLowerCase() === bookingCode) {
-            return {
-                name: columns[2].replace(/['"]+/g, '').trim(),
-                category: columns[3].replace(/['"]+/g, '').trim(),
-                seatNumbers: columns[1].replace(/['"]+/g, '').split(' ').map(seat => seat.trim())
-            };
+        const cleanedColumns = columns.map(col => col.replace(/['"]+/g, '').trim());
+
+        if (cleanedColumns[0].toLowerCase() === bookingCode) {
+          const [firstName, lastName, category, seatNumbers] = cleanedColumns.slice(1);
+          return { firstName, lastName, category, seatNumbers };
         }
+      }
+      return null; // Return null if booking code is not found
     }
-    return null; 
-}
+  </script>
+</body>
+</html>
