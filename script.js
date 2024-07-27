@@ -1,17 +1,19 @@
 document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const resultDiv = document.getElementById('result');
-    const nameDisplay = document.getElementById('name');
+    const firstNameDisplay = document.getElementById('firstName');
+    const lastNameDisplay = document.getElementById('lastName');
     const categoryDisplay = document.getElementById('category');
     const seatNumbersDisplay = document.getElementById('seatNumbers');
 
     resultDiv.textContent = ''; // Clear previous results
-    nameDisplay.textContent = '';
+    firstNameDisplay.textContent = '';
+    lastNameDisplay.textContent = '';
     categoryDisplay.textContent = '';
     seatNumbersDisplay.textContent = '';
 
     const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
-    const dataUrl = 'seat_finder.csv'; // Replace with your actual CSV file name
+    const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; // Replace with your actual CSV file name
 
     try {
         const response = await fetch(dataUrl, { mode: 'cors' });
@@ -20,7 +22,8 @@ document.getElementById('seatFinderForm').addEventListener('submit', async (even
         const dataFound = findSeatDetails(bookingCode, rows);
 
         if (dataFound) {
-            nameDisplay.textContent = `Name: ${dataFound.name}`;
+            firstNameDisplay.textContent = `First Name: ${dataFound.firstName}`;
+            lastNameDisplay.textContent = `Last Name: ${dataFound.lastName}`;
             categoryDisplay.textContent = `Category: ${dataFound.category}`;
             seatNumbersDisplay.textContent = `Your Seat(s): ${dataFound.seatNumbers.join(', ')}`;
         } else {
@@ -37,8 +40,9 @@ function findSeatDetails(bookingCode, rows) {
         const columns = row.split(',');
         if (columns[0].replace(/['"]+/g, '').trim().toLowerCase() === bookingCode) {
             return {
-                name: columns[2].replace(/['"]+/g, '').trim(),
-                category: columns[3].replace(/['"]+/g, '').trim(),
+                firstName: columns[2].replace(/['"]+/g, '').trim(),
+                lastName: columns[3].replace(/['"]+/g, '').trim(),
+                category: columns[4].replace(/['"]+/g, '').trim(), // Note the index change
                 seatNumbers: columns[1].replace(/['"]+/g, '').split(' ').map(seat => seat.trim())
             };
         }
