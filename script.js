@@ -1,34 +1,29 @@
-// ... (HTML structure from previous response)
+// ... (Google Sheet URL and fetch function remain the same)
+
+const form = document.getElementById('seatFinderForm');
+const resultDiv = document.getElementById('result');
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
+  resultDiv.textContent = ''; // Clear previous results
 
   const bookingCode = document.getElementById('bookingCode').value;
-  const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pubhtml?gid=0&single=true'; // Replace with your actual URL
+  const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pubhtml?gid=0&single=true'; 
   
   try {
     const response = await fetch(dataUrl);
     const data = await response.text();
-    const rows = data.split('\n'); // Split into rows
+    const rows = data.split('\n');
     const seatNumber = findSeatNumber(bookingCode, rows);
 
     if (seatNumber) {
-      result.textContent = `Your Seat: ${seatNumber}`;
+      resultDiv.textContent = `Your Seat: ${seatNumber}`;
     } else {
-      result.textContent = 'Booking code not found.';
+      resultDiv.textContent = 'Booking code not found.';
     }
   } catch (error) {
-    result.textContent = 'Error retrieving seat information.';
+    resultDiv.textContent = 'Error retrieving seat information.';
     console.error(error);
   }
 });
-
-function findSeatNumber(bookingCode, rows) {
-  for (const row of rows) {
-    const columns = row.split(',');
-    if (columns[0] === bookingCode) {
-      return columns[1];
-    }
-  }
-  return null; // Booking code not found
-}
+//....(findSeatNumber function remains the same)
