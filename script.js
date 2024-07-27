@@ -16,7 +16,7 @@ document.getElementById('seatFinderForm').addEventListener('submit', async (even
   resultDiv.textContent = '';
 
   const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
-  const dataUrl = 'seat_finder.csv'; // Or your Google Sheet URL if you're using that
+  const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; // Or your Google Sheet URL if you're using that
 
   try {
     const response = await fetch(dataUrl, { mode: 'cors' });
