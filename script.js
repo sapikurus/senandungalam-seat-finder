@@ -8,7 +8,7 @@ form.addEventListener('submit', async (event) => {
   resultDiv.textContent = ''; // Clear previous results
 
   const bookingCode = document.getElementById('bookingCode').value;
-  const dataUrl = 'YOUR_PUBLISHED_GOOGLE_SHEET_URL'; 
+  const dataUrl = 'seat_finder.csv'; 
   
   try {
     const response = await fetch(dataUrl);
