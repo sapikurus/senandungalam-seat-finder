@@ -1,36 +1,64 @@
-document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = ''; 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Senandung Alam Seat Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="Bannersenandungalam.png" alt="Senandung Alam Banner">
+  </header>
 
-    const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
-    const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; // Replace with your actual CSV file name
+  <main>
+    <h2>Find Your Seat</h2>
+    <form id="seatFinderForm">
+      <label for="bookingCode">Booking Code:</label>
+      <input type="text" id="bookingCode" name="bookingCode" required>
+      <button type="submit">Find My Seat</button>
+    </form>
+    <div id="result">
+    </div>
+  </main>
 
-    try {
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = '';
+
+      const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
+      const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; // Replace with your actual CSV file name
+
+      try {
         const response = await fetch(dataUrl, { mode: 'cors' });
         const data = await response.text();
         const rows = data.split('\n').slice(1); // Skip header row
-        const seatNumbers = findSeatNumbers(bookingCode, rows);
+        const seatInfo = findSeatInfo(bookingCode, rows);
 
-        if (seatNumbers) {
-            resultDiv.textContent = `Your Seat(s): ${seatNumbers}`;
+        if (seatInfo) {
+          resultDiv.textContent = `Name: ${seatInfo.firstName} ${seatInfo.lastName}\nCategory: ${seatInfo.category}\nSeat(s): ${seatInfo.seatNumbers}`;
         } else {
-            resultDiv.textContent = 'Booking code not found. Please check your code and try again.';
+          resultDiv.textContent = 'Booking code not found. Please check your code and try again.';
         }
-    } catch (error) {
+      } catch (error) {
         resultDiv.textContent = 'Error retrieving seat information.';
         console.error(error);
-    }
-});
+      }
+    });
 
-function findSeatNumbers(bookingCode, rows) {
-  for (const row of rows) {
-    const columns = row.split(',');
-    // Remove quotes and extra spaces before comparing
-    if (columns[0].replace(/['"]+/g, '').trim().toLowerCase() === bookingCode) {
-      // Split seats by spaces and trim each seat
-      return columns[1].replace(/['"]+/g, '').split(' ').map(seat => seat.trim());
+    function findSeatInfo(bookingCode, rows) {
+      for (const row of rows) {
+        const columns = row.split(',');
+        const cleanedColumns = columns.map(col => col.replace(/['"]+/g, '').trim());
+
+        if (cleanedColumns[0].toLowerCase() === bookingCode) {
+          const [firstName, lastName, category, seatNumbers] = cleanedColumns.slice(1);
+          return { firstName, lastName, category, seatNumbers };
+        }
+      }
+      return null; // Return null if booking code is not found
     }
-  }
-  return null; // Return null if booking code is not found
-}
+  </script>
+</body>
+</html>
