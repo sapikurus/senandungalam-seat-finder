@@ -1,27 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Senandung Alam Seat Finder</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <img src="Bannersenandungalam.png" alt="Senandung Alam Banner">
-  </header>
-
-  <main>
-    <h2>Find Your Seat</h2>
-    <form id="seatFinderForm">
-      <label for="bookingCode">Booking Code:</label>
-      <input type="text" id="bookingCode" name="bookingCode" required>
-      <button type="submit">Find My Seat</button>
-    </form>
-    <div id="result">
-    </div>
-  </main>
-
-  <script src="script.js"></script>
-  <script>
     document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const resultDiv = document.getElementById('result');
