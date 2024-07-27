@@ -1,3 +1,19 @@
+// Define the function FIRST
+function findSeatDetails(bookingCode, rows) {
+    for (const row of rows) {
+        const columns = row.split(',');
+        if (columns[0].replace(/['"]+/g, '').trim().toLowerCase() === bookingCode) {
+            return {
+                firstName: columns[2].trim(),
+                lastName: columns[3].trim(),
+                category: columns[4].trim(),
+                seatNumbers: columns[1].split(' ').map(seat => seat.trim())
+            };
+        }
+    }
+    return null; 
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
