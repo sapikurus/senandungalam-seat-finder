@@ -1,31 +1,27 @@
-// ... (Google Sheet URL and fetch function remain the same)
+// Function definition FIRST
+function findSeatNumbers(bookingCode, rows) {
+  for (const row of rows) {
+    const columns = row.split(',');
+    if (columns[0].trim().toLowerCase() === bookingCode.trim().toLowerCase()) {
+      return columns[1].split(',').map(seat => seat.trim()).filter(seat => seat !== "");
+    }
+  }
+  return [];
+}
 
-const form = document.getElementById('seatFinderForm');
-const resultDiv = document.getElementById('result');
 
-form.addEventListener('submit', async (event) => {
+document.getElementById('seatFinderForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  resultDiv.textContent = ''; // Clear previous results
+  const resultDiv = document.getElementById('result');
+  resultDiv.textContent = '';
 
-  const bookingCode = document.getElementById('bookingCode').value;
-  const dataUrl = 'seat_finder.csv'; 
-  
+  const bookingCode = document.getElementById('bookingCode').value.trim().toLowerCase();
+  const dataUrl = 'seat_finder.csv'; // Or your Google Sheet URL if you're using that
+
   try {
-    const response = await fetch(dataUrl, { mode: 'cors' }) // <-- Replace this line
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          return response.text();
-        })
-
+    const response = await fetch(dataUrl, { mode: 'cors' });
     const data = await response.text();
-    const rows = data.split('\n');
-
-    // Log the raw data and booking code to the console
-    console.log("Raw data from CSV/Sheet:", rows);
-    console.log("Booking code entered:", bookingCode);
-
+    const rows = data.split('\n').slice(1);
     const seatNumbers = findSeatNumbers(bookingCode, rows);
 
     if (seatNumbers.length > 0) {
@@ -38,4 +34,3 @@ form.addEventListener('submit', async (event) => {
     console.error(error);
   }
 });
-//....(findSeatNumber function remains the same)
