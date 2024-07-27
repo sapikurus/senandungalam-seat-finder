@@ -34,4 +34,3 @@ function findSeatNumbers(bookingCode, rows) {
   }
   return null; // Return null if booking code is not found
 }
-}
