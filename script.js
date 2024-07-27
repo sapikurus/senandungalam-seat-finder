@@ -35,6 +35,5 @@
       }
       return null; // Return null if booking code is not found
     }
-  </script>
-</body>
-</html>
+
+
