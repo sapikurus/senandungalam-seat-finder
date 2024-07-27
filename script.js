@@ -8,8 +8,9 @@ form.addEventListener('submit', async (event) => {
   resultDiv.textContent = ''; // Clear previous results
 
   const bookingCode = document.getElementById('bookingCode').value;
-  const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; 
-  
+  //const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNP9E1oBpSq843OgO65sQEXGqOQQvz0cD9_sq6hPpvGxX62n9k8dyWByJ70OyP_AG4sZdx12RcLzCh/pub?output=csv'; 
+   const dataUrl = 'seat_finder.csv';
+
   try {
     const response = await fetch(dataUrl);
     const data = await response.text();
