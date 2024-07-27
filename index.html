@@ -2,24 +2,27 @@
 <html>
 <head>
   <title>Senandung Alam Seat Finder</title>
-  <link rel="stylesheet" href="style.css"> 
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <img src="Bannersenandungalam.png" alt="Senandung Alam Banner">
+    <img src="your-banner-image.jpg" alt="Senandung Alam Banner">
   </header>
 
- <main>
-  <h2>Find Your Seat</h2>
-  <form id="seatFinderForm">
-    </form>
+  <main>
+    <h2>Find Your Seat</h2>
+    <form id="seatFinderForm">
+      <label for="bookingCode">Booking Code:</label>
+      <input type="text" id="bookingCode" name="bookingCode" required>
+      <button type="submit">Find My Seat</button> </form>
     <div id="result">
         <p id="firstName"></p> 
         <p id="lastName"></p> 
         <p id="category"></p> 
         <p id="seatNumbers"></p> 
     </div>
-</main>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
