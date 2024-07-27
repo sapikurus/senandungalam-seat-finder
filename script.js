@@ -11,15 +11,27 @@ form.addEventListener('submit', async (event) => {
   const dataUrl = 'seat_finder.csv'; 
   
   try {
-    const response = await fetch(dataUrl);
+    const response = await fetch(dataUrl, { mode: 'cors' }) // <-- Replace this line
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          return response.text();
+        })
+
     const data = await response.text();
     const rows = data.split('\n');
-    const seatNumber = findSeatNumber(bookingCode, rows);
 
-    if (seatNumber) {
-      resultDiv.textContent = `Your Seat: ${seatNumber}`;
+    // Log the raw data and booking code to the console
+    console.log("Raw data from CSV/Sheet:", rows);
+    console.log("Booking code entered:", bookingCode);
+
+    const seatNumbers = findSeatNumbers(bookingCode, rows);
+
+    if (seatNumbers.length > 0) {
+      resultDiv.textContent = `Your Seat(s): ${seatNumbers.join(', ')}`;
     } else {
-      resultDiv.textContent = 'Booking code not found.';
+      resultDiv.textContent = 'Booking code not found. Please check your code and try again.';
     }
   } catch (error) {
     resultDiv.textContent = 'Error retrieving seat information.';
