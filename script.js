@@ -13,7 +13,7 @@
         const seatInfo = findSeatInfo(bookingCode, rows);
 
         if (seatInfo) {
-          resultDiv.textContent = `Name: ${seatInfo.firstName} ${seatInfo.lastName}\nCategory: ${seatInfo.category}\nSeat(s): ${seatInfo.seatNumbers}`;
+          resultDiv.innerHTML = `Name: ${seatInfo.firstName} ${seatInfo.lastName}<br>Category: ${seatInfo.category}<br>Seat(s): ${seatInfo.seatNumbers}`;
         } else {
           resultDiv.textContent = 'Booking code not found. Please check your code and try again.';
         }
